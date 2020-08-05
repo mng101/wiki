@@ -1,0 +1,2 @@
+# Website
+A website (aka web site) is a collection of **web pages** and related content that is identified by a common **domain name** and published on at least one web server. Notable examples are wikipedia.org, google.com, and amazon.com.
