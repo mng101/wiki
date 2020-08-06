@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 
 from . import util
+from . import forms
 
 import markdown2
 
@@ -31,3 +32,21 @@ def showentry(request, entry):
     })
 
 
+def entryform(request):
+    if request.method == "POST":
+        form = forms.EntryForm(request.POST)
+        if form.is_valid():
+            entry = form.cleaned_data["entry"]
+            entry_text = form.cleaned_data["entry_text"]
+            entry_text = "# " + entry + "\n" + entry_text
+            util.save_entry(entry, entry_text)
+            return HttpResponseRedirect(reverse("showentry", args=[entry]))
+        else:
+            return render(request, "encyclopedia/entryform.html", {
+                'form': form
+            })
+    else:
+        form = forms.EntryForm()
+        return render(request, "encyclopedia/entryform.html", {
+            'form': form
+        })

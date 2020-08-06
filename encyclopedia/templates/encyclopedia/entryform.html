@@ -1,0 +1,17 @@
+{% extends "encyclopedia/layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Create/Update Encyclopedia Entry
+{% endblock %}
+
+{% block body %}
+    <h1>Create/Update Wiki Pages</h1>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-primary" value="Submit">
+        </form>
+    </div>
+{% endblock %}
