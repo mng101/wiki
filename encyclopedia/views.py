@@ -7,6 +7,7 @@ from . import util
 from . import forms
 
 import markdown2
+import random
 
 
 def index(request):
@@ -23,16 +24,16 @@ def showentry(request, entry):
         page_edit_menu = ""
     else:
         wiki_page = markdown2.markdown(util.get_entry(entry))
-#        page_edit_menu = '<br><a href="' + reverse(updateform) + entry + '">Edit this page</a>'
+        page_edit_menu = '<br><a href="' + reverse(entryform) + entry + '">Edit this page</a>'
 
     return render(request, "encyclopedia/entry.html", {
         "title": entry,
         "wiki_page": wiki_page,
-#        "page_edit_menu": page_edit_menu
+        "page_edit_menu": page_edit_menu
     })
 
 
-def entryform(request):
+def entryform(request, entry=""):
     if request.method == "POST":
         form = forms.EntryForm(request.POST)
         if form.is_valid():
@@ -46,7 +47,17 @@ def entryform(request):
                 'form': form
             })
     else:
-        form = forms.EntryForm()
+        if entry is not None:
+            entry_text = util.get_entry(entry).split("\n", 1)[1]
+            form = forms.EntryForm(initial={"entry":entry, "entry_text":entry_text})
+            form.fields["entry"].widget.attrs['readonly'] = True
+        else:
+            form = forms.EntryForm()
+
         return render(request, "encyclopedia/entryform.html", {
             'form': form
         })
+
+def randompage(request):
+    entry = random.choice(util.list_entries())
+    return showentry(request, entry)
