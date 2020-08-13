@@ -11,9 +11,25 @@ import random
 
 
 def index(request):
-    return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
-    })
+    querystring = request.GET.get('q')
+
+    if querystring is None:
+        # This is a request for the Index Page
+        return render(request, "encyclopedia/index.html", {
+            "entries": util.list_entries()
+        })
+    else:
+        # This is a search for entries containing the query string
+        entries = util.list_entries()
+        match = []
+        for entry in entries:
+            if querystring.casefold() in entry.casefold():
+                match.append(entry)
+
+        return render(request, "encyclopedia/index.html",
+            dict(entries = match)
+        )
+
 
 
 def showentry(request, entry):
@@ -47,12 +63,12 @@ def entryform(request, entry=""):
                 'form': form
             })
     else:
-        if entry is not None:
+        if len(entry) == 0:             # Creating a new Page
+            form = forms.EntryForm()
+        else:                           # Updating an existing Page
             entry_text = util.get_entry(entry).split("\n", 1)[1]
             form = forms.EntryForm(initial={"entry":entry, "entry_text":entry_text})
             form.fields["entry"].widget.attrs['readonly'] = True
-        else:
-            form = forms.EntryForm()
 
         return render(request, "encyclopedia/entryform.html", {
             'form': form
