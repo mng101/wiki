@@ -24,4 +24,3 @@ class EntryForm(forms.Form):
             entries = util.list_entries()
             if entry.casefold() in [x.casefold() for x in entries]:
                 raise forms.ValidationError("Entry for %s already exists" % entry)
-        # return (entry)
