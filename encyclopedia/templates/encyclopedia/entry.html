@@ -1,0 +1,17 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Encyclopedia : {{ title }}
+{% endblock %}
+
+{% block body %}
+
+    {{ wiki_page |safe }}
+
+{% endblock %}
+
+{% block nav %}
+
+    {{ page_edit_menu |safe }}
+
+{% endblock %}
